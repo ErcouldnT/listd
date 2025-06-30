@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"prepare": "husky install",
-		"start": "prisma migrate deploy || prisma db push && prisma db seed && node build",
+		"start": "(prisma migrate deploy || prisma db push) && prisma generate && prisma db seed && node build",
 		"dev": "concurrently \"vite dev\" typesafe-i18n",
 		"build": "vite build",
 		"preview": "vite preview --host 0.0.0.0",
