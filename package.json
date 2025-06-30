@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"prepare": "husky install",
+		"start": "npm run migrate:deploy && node build",
 		"dev": "concurrently \"vite dev\" typesafe-i18n",
 		"build": "vite build",
 		"preview": "vite preview --host 0.0.0.0",

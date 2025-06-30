@@ -1,6 +1,5 @@
 import preprocess from 'svelte-preprocess';
-import adapter from '@sveltejs/adapter-auto';
-import nodeAdapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -16,7 +15,7 @@ const config = {
 
 	kit: {
 		// eslint-disable-next-line no-extra-boolean-cast
-		adapter: !!process.env.NODE_BUILD ? nodeAdapter() : adapter(),
+		adapter: adapter(),
 	},
 };
 
