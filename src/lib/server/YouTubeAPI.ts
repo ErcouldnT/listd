@@ -179,7 +179,7 @@ async function getAllVideos(
 
 async function getChannelVideos(channelId: string) {
 	const cacheKey = `yt:videos:(channelId:${channelId})`;
-	console.log(`🆕 cacheKey: ${cacheKey}`);
+	console.log(`🔥 cacheKey: ${cacheKey}`);
 	const cachedVideosRaw = await redisClient.get(cacheKey);
 
 	if (!cachedVideosRaw) {
@@ -205,6 +205,14 @@ async function getChannelVideos(channelId: string) {
 	try {
 		cached = JSON.parse(cachedVideosRaw);
 		console.log(`✅ Cache found for channelId: ${channelId}. Timestamp: ${cached.timestamp}`);
+
+		// backwards compatibility for old cache format
+		if (!cached.videos && cached) {
+			console.log(`🔄 Backwards compatibility: converting old cache format for channelId: ${channelId}`);
+			cached.videos = cached;
+			return cached.videos as YouTubeVideoAPIResponse[];
+		}
+
 		if (cached.videos.length === 0) {
 			console.log(`💀 No videos found in cache: ${channelId}. Returning empty array.`);
 			const videos = await getAllVideos(channelId);
@@ -230,7 +238,7 @@ async function getChannelVideos(channelId: string) {
 	try {
 		const videos = await getAllVideos(channelId);
 		if (videos.length === 0) {
-			console.log(`🔎 No videos found for channelId: ${channelId}.`);
+			console.log(`🔎 No new videos found for channelId: ${channelId}.`);
 			return cached.videos || []; // Return old cached videos if no new videos found
 		}
 		await redisClient.set(
