@@ -208,7 +208,9 @@ async function getChannelVideos(channelId: string) {
 
 		// backwards compatibility for old cache format
 		if (!cached.videos && cached) {
-			console.log(`🔄 Backwards compatibility: converting old cache format for channelId: ${channelId}`);
+			console.log(
+				`🔄 Backwards compatibility: converting old cache format for channelId: ${channelId}`
+			);
 			cached.videos = cached;
 			return cached.videos as YouTubeVideoAPIResponse[];
 		}
