@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-export const load = async ({ locals, route }) => {
+export const load = async ({ locals, route }) =>
 	// if (
 	// 	locals.session?.user &&
 	// 	!locals.session.user.settings.onboarded &&
@@ -15,8 +15,7 @@ export const load = async ({ locals, route }) => {
 	// ) {
 	// 	redirect(302, '/');
 	// }
-	return {
+	({
 		session: locals.session,
 		locale: locals.locale,
-	};
-};
+	});

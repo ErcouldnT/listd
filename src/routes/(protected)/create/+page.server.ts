@@ -92,7 +92,7 @@ export const actions = {
 		const formData = await event.request.formData();
 		const q = (formData.get('search') || '').toString();
 		try {
-		const results = await YouTubeAPI.searchChannels(q);
+			const results = await YouTubeAPI.searchChannels(q);
 			return { results };
 		} catch (error) {
 			// const {message} = (error as Error);
