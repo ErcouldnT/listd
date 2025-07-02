@@ -1,0 +1,60 @@
+services:
+    u04ckggwwss4g8wk84800wow-210116628543:
+        image: 'u04ckggwwss4g8wk84800wow:888f5a7ec237599c901239f07799d02427c1e012'
+        container_name: u04ckggwwss4g8wk84800wow-210116628543
+        restart: unless-stopped
+        expose:
+            - '5173'
+        networks:
+            coolify:
+                aliases:
+                    - u04ckggwwss4g8wk84800wow-210116628543
+        mem_limit: '0'
+        memswap_limit: '0'
+        mem_swappiness: 60
+        mem_reservation: '0'
+        cpus: 0.0
+        cpu_shares: 1024
+        env_file:
+            - .env
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - 'curl -s -X GET -f http://localhost:5173/ > /dev/null || wget -q -O- http://localhost:5173/ > /dev/null || exit 1'
+            interval: 5s
+            timeout: 5s
+            retries: 10
+            start_period: 5s
+        labels:
+            - traefik.enable=true
+            - traefik.http.middlewares.gzip.compress=true
+            - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+            - traefik.http.routers.http-0-u04ckggwwss4g8wk84800wow.entryPoints=http
+            - traefik.http.routers.http-0-u04ckggwwss4g8wk84800wow.middlewares=gzip
+            - 'traefik.http.routers.http-0-u04ckggwwss4g8wk84800wow.rule=Host(`listd.erkut.dev`) && PathPrefix(`/`)'
+            - traefik.http.routers.http-0-u04ckggwwss4g8wk84800wow.service=http-0-u04ckggwwss4g8wk84800wow
+            - traefik.http.services.http-0-u04ckggwwss4g8wk84800wow.loadbalancer.server.port=5173
+            - 'caddy_0.encode=zstd gzip'
+            - 'caddy_0.handle_path.0_reverse_proxy={{upstreams 5173}}'
+            - 'caddy_0.handle_path=/*'
+            - caddy_0.header=-Server
+            - 'caddy_0.try_files={path} /index.html /index.php'
+            - 'caddy_0=http://listd.erkut.dev'
+            - caddy_ingress_network=coolify
+            - coolify.managed=true
+            - coolify.version=4.0.0-beta.420.1
+            - coolify.applicationId=6
+            - coolify.type=application
+            - coolify.name=u04ckggwwss4g8wk84800wow
+            - coolify.resourceName=listd
+            - coolify.projectName=listd
+            - coolify.serviceName=listd
+            - coolify.environmentName=production
+            - coolify.pullRequestId=0
+        volumes:
+            - '/data/coolify/applications/u04ckggwwss4g8wk84800wow/coverage:/app/coverage'
+networks:
+    coolify:
+        external: true
+        name: coolify
+        attachable: true

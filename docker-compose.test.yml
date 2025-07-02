@@ -1,0 +1,29 @@
+version: '3.1'
+name: listd-test
+
+services:
+  db-test:
+    extends:
+      file: docker-compose.base.yml
+      service: db
+  redis-test:
+    extends:
+      file: docker-compose.base.yml
+      service: redis
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./coverage:/app/coverage
+    depends_on:
+      db-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    command: >
+      sh -c "dotenv -e .env.test -- npm run migrate:init && \
+        dotenv -e .env.test -- npx prisma db seed && \
+        dotenv -e .env.test -- npx prisma generate && \
+        dotenv -e .env.test -- npm run build && \
+        dotenv -e .env.test -- npx nyc playwright test"
